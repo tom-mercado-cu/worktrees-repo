@@ -100,10 +100,11 @@ alias wt-multi-new='$SCRIPT_DIR/wt-multi-new.sh'
 alias wt-list='source $SCRIPT_DIR/wt-list.sh'
 alias wt-clean='$SCRIPT_DIR/wt-clean.sh'
 alias wt-prune='$SCRIPT_DIR/wt-prune.sh'
-alias wt-help='$SCRIPT_DIR/wt-help.sh'"
+alias wt-help='$SCRIPT_DIR/wt-help.sh'
+alias wt-update='$SCRIPT_DIR/update.sh'"
 
 # Check if aliases already exist
-if grep -q "alias wt-new=" "$ZSHRC_FILE" || grep -q "alias wt-multi-new=" "$ZSHRC_FILE" || grep -q "alias wt-list=" "$ZSHRC_FILE"; then
+if grep -q "alias wt-new=" "$ZSHRC_FILE" || grep -q "alias wt-multi-new=" "$ZSHRC_FILE" || grep -q "alias wt-list=" "$ZSHRC_FILE" || grep -q "alias wt-update=" "$ZSHRC_FILE"; then
     echo -e "${YELLOW}⚠  Warning:${NC} Some worktree aliases already exist in your zshrc."
     echo -e "${CYAN}Please remove them manually before running this installer, or update them yourself.${NC}"
     echo ""
@@ -143,6 +144,7 @@ echo -e "    ${YELLOW}wt-list${NC}       → Navigate to an existing worktree"
 echo -e "    ${YELLOW}wt-clean${NC}      → Remove existing worktrees"
 echo -e "    ${YELLOW}wt-prune${NC}      → Clean up orphaned references"
 echo -e "    ${YELLOW}wt-help${NC}       → Show help"
+echo -e "    ${YELLOW}wt-update${NC}     → Update to latest version"
 echo ""
 echo -e "${DIM}The following lines will be added to: $ZSHRC_FILE${NC}"
 echo -e "${DIM}─────────────────────────────────────────────────────${NC}"

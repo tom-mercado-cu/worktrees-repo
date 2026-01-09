@@ -99,6 +99,7 @@ wt-new admin-front feature/branch-name -c
 ```
 
 **What happens:**
+
 1. Fetches latest from remote
 2. Creates new branch from default branch (main/master)
 3. Asks to copy `.env` file (if exists)
@@ -217,9 +218,9 @@ Selected repositories:
 Enter branch name: feature/GTT-1234-auth
 
 Configuration options:
-  Copy .env files from original repos? [Y/n]: 
-  Install dependencies? [Y/n]: 
-  Open workspace in Cursor when done? [Y/n]: 
+  Copy .env files from original repos? [Y/n]:
+  Install dependencies? [Y/n]:
+  Open workspace in Cursor when done? [Y/n]:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Processing: subscription-front
@@ -275,30 +276,31 @@ The multi-repo workflow automatically creates `.code-workspace` files:
 
 ### Single-Repo Commands
 
-| Command | Description | Example |
-| ------- | ----------- | ------- |
-| `wt-new [repo] <branch> [-c]` | Create worktree with new branch | `wt-new feature/auth -c` |
-| `wt-existing [repo] <branch> [-c]` | Checkout existing branch | `wt-existing hotfix/bug -c` |
+| Command                            | Description                     | Example                     |
+| ---------------------------------- | ------------------------------- | --------------------------- |
+| `wt-new [repo] <branch> [-c]`      | Create worktree with new branch | `wt-new feature/auth -c`    |
+| `wt-existing [repo] <branch> [-c]` | Checkout existing branch        | `wt-existing hotfix/bug -c` |
 
 ### Multi-Repo Commands
 
-| Command | Description | Example |
-| ------- | ----------- | ------- |
+| Command                   | Description                   | Example           |
+| ------------------------- | ----------------------------- | ----------------- |
 | `wt-multi-new [dir] [-c]` | Create worktrees across repos | `wt-multi-new -c` |
 
 ### Navigation & Management
 
-| Command | Description |
-| ------- | ----------- |
-| `wt-list` | List worktrees and navigate interactively |
-| `wt-clean` | Remove worktrees (interactive, with branch cleanup) |
-| `wt-prune` | Clean orphaned references in all repos |
-| `wt-help` | Show help |
+| Command     | Description                                         |
+| ----------- | --------------------------------------------------- |
+| `wt-list`   | List worktrees and navigate interactively           |
+| `wt-clean`  | Remove worktrees (interactive, with branch cleanup) |
+| `wt-prune`  | Clean orphaned references in all repos              |
+| `wt-help`   | Show help                                           |
+| `wt-update` | Update to latest version                            |
 
 ### Flags
 
-| Flag | Description |
-| ---- | ----------- |
+| Flag             | Description                   |
+| ---------------- | ----------------------------- |
 | `-c`, `--cursor` | Open in Cursor after creation |
 
 ---
@@ -441,43 +443,48 @@ pr/colleague-feature          # For PR reviews
 ### Multi-Repo Best Practices
 
 1. **Keep branch names identical** across repos
-    ```bash
-    # Front: feature/GTT-1234-auth
-    # Back:  feature/GTT-1234-auth
-    ```
+
+   ```bash
+   # Front: feature/GTT-1234-auth
+   # Back:  feature/GTT-1234-auth
+   ```
 
 2. **Create PRs together**
-    - Link PRs in descriptions
-    - Merge at the same time
+
+   - Link PRs in descriptions
+   - Merge at the same time
 
 3. **Use workspace files**
-    - Opens all repos in one window
-    - Shared context for AI
+
+   - Opens all repos in one window
+   - Shared context for AI
 
 4. **Clean up together**
-    - Use `wt-clean` to remove all at once
+   - Use `wt-clean` to remove all at once
 
 ### AI Assistant Tips
 
 1. **Isolated context**
-    ```bash
-    wt-new ai-feature-1 -c    # Agent 1
-    wt-new ai-feature-2 -c    # Agent 2
-    # Both work independently
-    ```
+
+   ```bash
+   wt-new ai-feature-1 -c    # Agent 1
+   wt-new ai-feature-2 -c    # Agent 2
+   # Both work independently
+   ```
 
 2. **Safe experiments**
-    ```bash
-    wt-new experiment/ai-suggestion -c
-    # Try it, delete if bad
-    ```
+
+   ```bash
+   wt-new experiment/ai-suggestion -c
+   # Try it, delete if bad
+   ```
 
 3. **Full-stack context**
-    ```bash
-    wt-multi-new -c
-    # AI sees both front + back
-    # Better suggestions
-    ```
+   ```bash
+   wt-multi-new -c
+   # AI sees both front + back
+   # Better suggestions
+   ```
 
 ### Weekly Cleanup Routine
 
@@ -643,9 +650,16 @@ Need help?
 ## 🔄 Update
 
 ```bash
-cd ~/.wt-tools && git pull
+~/.wt-tools/update.sh
 source ~/.zshrc
 ```
+
+This will:
+
+1. Remove old aliases from your `.zshrc`
+2. Delete the old installation
+3. Clone the latest version
+4. Run the installer again
 
 ## 🗑️ Uninstall
 
@@ -664,16 +678,19 @@ source ~/.zshrc
 ## 🎯 Summary
 
 **Single-Repo Workflow:**
+
 - Fast, simple, daily development
 - Perfect for AI assistants
 - One command: `wt-new feature/x -c`
 
 **Multi-Repo Workflow:**
+
 - Fullstack features
 - Coordinated changes
 - Unified workspace: `wt-multi-new -c`
 
 **Golden Rules:**
+
 1. One worktree = one task
 2. Clean up after merging
 3. Use `-c` flag for instant Cursor
