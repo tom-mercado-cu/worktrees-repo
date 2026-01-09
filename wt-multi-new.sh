@@ -221,8 +221,19 @@ for repo in "${SELECTED_REPOS[@]}"; do
                     echo -e "  ${YELLOW}⚠${NC}  Invalid selection, using default: ${DEFAULT_BRANCH}"
                 fi
             else
-                # User entered branch name directly
-                DEFAULT_BRANCH="$BASE_SELECTION"
+                # User entered branch name directly - validate it exists
+                USER_BRANCH="$BASE_SELECTION"
+                # Remove origin/ prefix if present
+                USER_BRANCH_CLEAN=$(echo "$USER_BRANCH" | sed 's|^origin/||')
+
+                # Check if branch exists (try remote first, then local)
+                if git show-ref --verify --quiet "refs/remotes/origin/$USER_BRANCH_CLEAN" 2>/dev/null; then
+                    DEFAULT_BRANCH="$USER_BRANCH_CLEAN"
+                elif git show-ref --verify --quiet "refs/heads/$USER_BRANCH_CLEAN" 2>/dev/null; then
+                    DEFAULT_BRANCH="$USER_BRANCH_CLEAN"
+                else
+                    echo -e "  ${RED}✗${NC} Branch '$USER_BRANCH' not found, using default: ${DEFAULT_BRANCH}"
+                fi
             fi
         fi
         echo ""
