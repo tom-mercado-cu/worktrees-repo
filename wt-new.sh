@@ -12,6 +12,7 @@ NC='\033[0m' # No Color
 BOLD='\033[1m'
 
 # Parse arguments
+REPO_ARG=""
 BRANCH_NAME=""
 OPEN_CURSOR=false
 
@@ -22,7 +23,10 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         *)
-            if [ -z "$BRANCH_NAME" ]; then
+            # First non-flag arg could be repo name or branch name
+            if [ -z "$REPO_ARG" ]; then
+                REPO_ARG="$1"
+            elif [ -z "$BRANCH_NAME" ]; then
                 BRANCH_NAME="$1"
             fi
             shift
@@ -30,19 +34,78 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Check if we're in a git repository
-if ! git rev-parse --is-inside-work-tree &>/dev/null; then
-    echo -e "${RED}Error: Not inside a git repository${NC}"
-    exit 1
+# Determine the repo to use
+REPO_ROOT=""
+REPO_NAME=""
+PARENT_DIR=""
+
+# Check if we're inside a git repo
+if git rev-parse --is-inside-work-tree &>/dev/null; then
+    # We're inside a git repo
+    CURRENT_REPO_ROOT=$(git rev-parse --show-toplevel)
+    CURRENT_REPO_NAME=$(basename "$CURRENT_REPO_ROOT")
+    
+    if [ -n "$REPO_ARG" ]; then
+        # Check if REPO_ARG matches current repo name - if so, it's the repo, branch is second arg
+        if [ "$REPO_ARG" = "$CURRENT_REPO_NAME" ]; then
+            REPO_ROOT="$CURRENT_REPO_ROOT"
+            REPO_NAME="$CURRENT_REPO_NAME"
+            # BRANCH_NAME is already set from second arg (or empty)
+        else
+            # REPO_ARG might be a branch name (we're in the repo we want to use)
+            # Or it might be a different repo name
+            
+            # Check if a repo with this name exists in parent directory
+            POTENTIAL_REPO="$(dirname "$CURRENT_REPO_ROOT")/$REPO_ARG"
+            if [ -d "$POTENTIAL_REPO" ] && ([ -d "$POTENTIAL_REPO/.git" ] || [ -f "$POTENTIAL_REPO/.git" ]); then
+                # It's a repo name, use that repo
+                REPO_ROOT="$POTENTIAL_REPO"
+                REPO_NAME="$REPO_ARG"
+                # BRANCH_NAME is already set from second arg (or empty)
+            else
+                # It's a branch name, use current repo
+                REPO_ROOT="$CURRENT_REPO_ROOT"
+                REPO_NAME="$CURRENT_REPO_NAME"
+                # Shift: REPO_ARG is actually the branch name
+                if [ -z "$BRANCH_NAME" ]; then
+                    BRANCH_NAME="$REPO_ARG"
+                else
+                    # Both were set, REPO_ARG was actually branch, ignore second
+                    BRANCH_NAME="$REPO_ARG"
+                fi
+            fi
+        fi
+    else
+        # No args, use current repo
+        REPO_ROOT="$CURRENT_REPO_ROOT"
+        REPO_NAME="$CURRENT_REPO_NAME"
+    fi
+    
+    PARENT_DIR=$(dirname "$REPO_ROOT")
+else
+    # Not inside a git repo - REPO_ARG must be provided
+    if [ -z "$REPO_ARG" ]; then
+        echo -e "${RED}Error: Not inside a git repository.${NC}"
+        echo -e "${CYAN}Usage: wt-new <repo-name> <branch-name> [-c]${NC}"
+        echo -e "${CYAN}   or: wt-new <branch-name> [-c]  (from inside a repo)${NC}"
+        exit 1
+    fi
+    
+    # Look for repo in current directory
+    CURRENT_DIR=$(pwd)
+    POTENTIAL_REPO="$CURRENT_DIR/$REPO_ARG"
+    
+    if [ -d "$POTENTIAL_REPO" ] && ([ -d "$POTENTIAL_REPO/.git" ] || [ -f "$POTENTIAL_REPO/.git" ]); then
+        REPO_ROOT="$POTENTIAL_REPO"
+        REPO_NAME="$REPO_ARG"
+        PARENT_DIR="$CURRENT_DIR"
+    else
+        echo -e "${RED}Error: Repository '$REPO_ARG' not found in current directory.${NC}"
+        echo -e "${CYAN}Make sure you're in a directory containing the repo, or cd into the repo first.${NC}"
+        exit 1
+    fi
 fi
 
-# Get repo root and name
-REPO_ROOT=$(git rev-parse --show-toplevel)
-REPO_NAME=$(basename "$REPO_ROOT")
-
-# Determine parent directory structure
-# If we're in a worktree, find the main repo's parent
-PARENT_DIR=$(dirname "$REPO_ROOT")
 WORKTREES_DIR="$PARENT_DIR/worktrees"
 
 echo -e "${BOLD}${CYAN}╔════════════════════════════════════════╗${NC}"
@@ -52,7 +115,7 @@ echo ""
 
 # If no branch name provided, ask for it
 if [ -z "$BRANCH_NAME" ]; then
-    echo -e "${BOLD}Current repo:${NC} ${CYAN}$REPO_NAME${NC}"
+    echo -e "${BOLD}Repo:${NC} ${CYAN}$REPO_NAME${NC}"
     echo ""
     read -p "$(echo -e ${BOLD}Enter branch name:${NC} )" BRANCH_NAME
     
@@ -70,6 +133,7 @@ FEATURE_DIR="$WORKTREES_DIR/$BRANCH_DIR_NAME"
 WORKTREE_PATH="$FEATURE_DIR/$REPO_NAME"
 
 echo -e "${BOLD}Creating worktree:${NC}"
+echo -e "  ${CYAN}→${NC} Repo: ${YELLOW}$REPO_NAME${NC}"
 echo -e "  ${CYAN}→${NC} Branch: ${YELLOW}$BRANCH_NAME${NC}"
 echo -e "  ${CYAN}→${NC} Path: ${YELLOW}$WORKTREE_PATH${NC}"
 echo ""
@@ -116,6 +180,9 @@ mkdir -p "$FEATURE_DIR"
 echo ""
 echo -e "${BOLD}${BLUE}Creating worktree...${NC}"
 echo ""
+
+# Change to repo root for git operations
+cd "$REPO_ROOT"
 
 # Fetch latest from remote
 echo -e "  ${CYAN}→${NC} Fetching latest from remote..."
