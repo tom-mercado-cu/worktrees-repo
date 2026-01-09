@@ -55,10 +55,10 @@ git clone --depth 1 "$REPO_URL" "$INSTALL_DIR"
 # Make scripts executable
 chmod +x "$INSTALL_DIR"/*.sh
 
-# Run the local installer
+# Run the local installer with auto-yes flag
 echo ""
 cd "$INSTALL_DIR"
-./install.sh
+./install.sh -y
 
 echo ""
 echo -e "${GREEN}✓${NC} Installation complete!"

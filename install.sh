@@ -10,6 +10,20 @@ NC='\033[0m' # No Color
 BOLD='\033[1m'
 DIM='\033[2m'
 
+# Parse arguments
+AUTO_YES=false
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -y|--yes)
+            AUTO_YES=true
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
 # Get the directory where THIS script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -34,53 +48,60 @@ for candidate in "${ZSHRC_CANDIDATES[@]}"; do
 done
 
 if [ -z "$ZSHRC_FILE" ]; then
-    echo -e "${YELLOW}Could not find .zshrc file automatically.${NC}"
-    echo -e "${DIM}Searched in:${NC}"
-    for candidate in "${ZSHRC_CANDIDATES[@]}"; do
-        echo -e "  ${DIM}- $candidate${NC}"
-    done
-    echo ""
-    
-    # Offer to create default .zshrc
-    DEFAULT_ZSHRC="$HOME/.zshrc"
-    echo -e "Would you like to:"
-    echo -e "  ${YELLOW}1${NC}) Create ${CYAN}$DEFAULT_ZSHRC${NC}"
-    echo -e "  ${YELLOW}2${NC}) Enter a custom path"
-    echo -e "  ${YELLOW}q${NC}) Cancel installation"
-    echo ""
-    read -p "Selection [1]: " ZSHRC_CHOICE
-    ZSHRC_CHOICE=${ZSHRC_CHOICE:-1}
-    
-    case "$ZSHRC_CHOICE" in
-        1)
-            ZSHRC_FILE="$DEFAULT_ZSHRC"
-            touch "$ZSHRC_FILE"
-            echo -e "${GREEN}✓${NC} Created: ${CYAN}$ZSHRC_FILE${NC}"
-            ;;
-        2)
-            read -p "Enter the path to your .zshrc file: " ZSHRC_FILE
-            if [ ! -f "$ZSHRC_FILE" ]; then
-                read -p "$(echo -e "File doesn't exist. Create it? [Y/n]: ")" CREATE_IT
-                CREATE_IT=${CREATE_IT:-Y}
-                if [[ "$CREATE_IT" =~ ^[Yy]$ ]]; then
-                    touch "$ZSHRC_FILE"
-                    echo -e "${GREEN}✓${NC} Created: ${CYAN}$ZSHRC_FILE${NC}"
-                else
-                    echo -e "${RED}Installation cancelled.${NC}"
-                    exit 1
+    if [ "$AUTO_YES" = true ]; then
+        # In auto mode, create default .zshrc
+        ZSHRC_FILE="$HOME/.zshrc"
+        touch "$ZSHRC_FILE"
+        echo -e "${GREEN}✓${NC} Created: ${CYAN}$ZSHRC_FILE${NC}"
+    else
+        echo -e "${YELLOW}Could not find .zshrc file automatically.${NC}"
+        echo -e "${DIM}Searched in:${NC}"
+        for candidate in "${ZSHRC_CANDIDATES[@]}"; do
+            echo -e "  ${DIM}- $candidate${NC}"
+        done
+        echo ""
+        
+        # Offer to create default .zshrc
+        DEFAULT_ZSHRC="$HOME/.zshrc"
+        echo -e "Would you like to:"
+        echo -e "  ${YELLOW}1${NC}) Create ${CYAN}$DEFAULT_ZSHRC${NC}"
+        echo -e "  ${YELLOW}2${NC}) Enter a custom path"
+        echo -e "  ${YELLOW}q${NC}) Cancel installation"
+        echo ""
+        read -p "Selection [1]: " ZSHRC_CHOICE
+        ZSHRC_CHOICE=${ZSHRC_CHOICE:-1}
+        
+        case "$ZSHRC_CHOICE" in
+            1)
+                ZSHRC_FILE="$DEFAULT_ZSHRC"
+                touch "$ZSHRC_FILE"
+                echo -e "${GREEN}✓${NC} Created: ${CYAN}$ZSHRC_FILE${NC}"
+                ;;
+            2)
+                read -p "Enter the path to your .zshrc file: " ZSHRC_FILE
+                if [ ! -f "$ZSHRC_FILE" ]; then
+                    read -p "$(echo -e "File doesn't exist. Create it? [Y/n]: ")" CREATE_IT
+                    CREATE_IT=${CREATE_IT:-Y}
+                    if [[ "$CREATE_IT" =~ ^[Yy]$ ]]; then
+                        touch "$ZSHRC_FILE"
+                        echo -e "${GREEN}✓${NC} Created: ${CYAN}$ZSHRC_FILE${NC}"
+                    else
+                        echo -e "${RED}Installation cancelled.${NC}"
+                        exit 1
+                    fi
                 fi
-            fi
-            ;;
-        q|Q)
-            echo -e "${CYAN}Installation cancelled.${NC}"
-            exit 0
-            ;;
-        *)
-            echo -e "${RED}Invalid selection.${NC}"
-            exit 1
-            ;;
-    esac
-    echo ""
+                ;;
+            q|Q)
+                echo -e "${CYAN}Installation cancelled.${NC}"
+                exit 0
+                ;;
+            *)
+                echo -e "${RED}Invalid selection.${NC}"
+                exit 1
+                ;;
+        esac
+        echo ""
+    fi
 fi
 
 echo -e "${GREEN}Found zshrc:${NC} ${CYAN}$ZSHRC_FILE${NC}"
@@ -106,7 +127,7 @@ alias wt-update='$SCRIPT_DIR/update.sh'"
 # Check if aliases already exist
 if grep -q "alias wt-new=" "$ZSHRC_FILE" || grep -q "alias wt-multi-new=" "$ZSHRC_FILE" || grep -q "alias wt-list=" "$ZSHRC_FILE" || grep -q "alias wt-update=" "$ZSHRC_FILE"; then
     echo -e "${YELLOW}⚠  Warning:${NC} Some worktree aliases already exist in your zshrc."
-    echo -e "${CYAN}Please remove them manually before running this installer, or update them yourself.${NC}"
+    echo -e "${CYAN}Please remove them manually before running this installer, or run wt-update.${NC}"
     echo ""
     echo -e "${DIM}Existing aliases found:${NC}"
     grep -E "alias wt-" "$ZSHRC_FILE" | while read -r line; do
@@ -146,17 +167,20 @@ echo -e "    ${YELLOW}wt-prune${NC}      → Clean up orphaned references"
 echo -e "    ${YELLOW}wt-help${NC}       → Show help"
 echo -e "    ${YELLOW}wt-update${NC}     → Update to latest version"
 echo ""
-echo -e "${DIM}The following lines will be added to: $ZSHRC_FILE${NC}"
-echo -e "${DIM}─────────────────────────────────────────────────────${NC}"
-echo -e "${CYAN}$ALIASES_BLOCK${NC}"
-echo -e "${DIM}─────────────────────────────────────────────────────${NC}"
-echo ""
 
-read -p "$(echo -e ${BOLD}Do you want to proceed? [y/N]:${NC} )" CONFIRM
+if [ "$AUTO_YES" = false ]; then
+    echo -e "${DIM}The following lines will be added to: $ZSHRC_FILE${NC}"
+    echo -e "${DIM}─────────────────────────────────────────────────────${NC}"
+    echo -e "${CYAN}$ALIASES_BLOCK${NC}"
+    echo -e "${DIM}─────────────────────────────────────────────────────${NC}"
+    echo ""
 
-if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
-    echo -e "${CYAN}Installation cancelled.${NC}"
-    exit 0
+    read -p "$(echo -e ${BOLD}Do you want to proceed? [y/N]:${NC} )" CONFIRM
+
+    if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+        echo -e "${CYAN}Installation cancelled.${NC}"
+        exit 0
+    fi
 fi
 
 # Add aliases to zshrc
