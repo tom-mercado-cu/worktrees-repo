@@ -129,7 +129,8 @@ alias wt-list='source $SCRIPT_DIR/wt-list.sh'
 alias wt-clean='$SCRIPT_DIR/wt-clean.sh'
 alias wt-prune='$SCRIPT_DIR/wt-prune.sh'
 alias wt-help='$SCRIPT_DIR/wt-help.sh'
-alias wt-update='$SCRIPT_DIR/update.sh'"
+alias wt-update='$SCRIPT_DIR/update.sh'
+alias wt-agent='$SCRIPT_DIR/wt-agent.sh'"
 
 # Check if aliases already exist
 if grep -q "alias wt-new=" "$ZSHRC_FILE" || grep -q "alias wt-multi-new=" "$ZSHRC_FILE" || grep -q "alias wt-list=" "$ZSHRC_FILE" || grep -q "alias wt-update=" "$ZSHRC_FILE"; then
@@ -173,6 +174,7 @@ echo -e "    ${YELLOW}wt-clean${NC}      → Remove existing worktrees"
 echo -e "    ${YELLOW}wt-prune${NC}      → Clean up orphaned references"
 echo -e "    ${YELLOW}wt-help${NC}       → Show help"
 echo -e "    ${YELLOW}wt-update${NC}     → Update to latest version"
+echo -e "    ${YELLOW}wt-agent${NC}      → Generate AGENTS.md for AI tools"
 echo ""
 
 if [ "$AUTO_YES" = false ]; then
