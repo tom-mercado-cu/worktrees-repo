@@ -104,7 +104,14 @@ if [ -z "$ZSHRC_FILE" ]; then
     fi
 fi
 
-echo -e "${GREEN}Found zshrc:${NC} ${CYAN}$ZSHRC_FILE${NC}"
+# Resolve symlink to real file
+if [ -L "$ZSHRC_FILE" ]; then
+    REAL_ZSHRC_FILE=$(readlink -f "$ZSHRC_FILE" 2>/dev/null || readlink "$ZSHRC_FILE")
+    echo -e "${GREEN}Found zshrc:${NC} ${CYAN}$ZSHRC_FILE${NC} → ${CYAN}$REAL_ZSHRC_FILE${NC}"
+    ZSHRC_FILE="$REAL_ZSHRC_FILE"
+else
+    echo -e "${GREEN}Found zshrc:${NC} ${CYAN}$ZSHRC_FILE${NC}"
+fi
 echo ""
 
 # Define the aliases - using consistent naming with wt- prefix

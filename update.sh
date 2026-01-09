@@ -133,7 +133,7 @@ echo -e "${BOLD}Step 5:${NC} Running installer..."
 echo ""
 
 cd "$INSTALL_DIR"
-./install.sh
+./install.sh -y
 
 echo ""
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
