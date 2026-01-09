@@ -10,16 +10,22 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 BOLD='\033[1m'
+DIM='\033[2m'
 
 # Parse arguments
 REPO_ARG=""
 BRANCH_NAME=""
 OPEN_CURSOR=false
+USE_CUSTOM_BASE=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         -c|--cursor)
             OPEN_CURSOR=true
+            shift
+            ;;
+        -b|--base-branch)
+            USE_CUSTOM_BASE=true
             shift
             ;;
         *)
@@ -86,8 +92,9 @@ else
     # Not inside a git repo - REPO_ARG must be provided
     if [ -z "$REPO_ARG" ]; then
         echo -e "${RED}Error: Not inside a git repository.${NC}"
-        echo -e "${CYAN}Usage: wt-new <repo-name> <branch-name> [-c]${NC}"
-        echo -e "${CYAN}   or: wt-new <branch-name> [-c]  (from inside a repo)${NC}"
+        echo -e "${CYAN}Usage: wt-new <repo-name> <branch-name> [-c] [-b]${NC}"
+        echo -e "${CYAN}   or: wt-new <branch-name> [-c] [-b]  (from inside a repo)${NC}"
+        echo -e "${CYAN}Flags: -c (open in Cursor), -b (choose custom base branch)${NC}"
         exit 1
     fi
     
@@ -222,7 +229,39 @@ if [ -z "$DEFAULT_BRANCH" ]; then
     DEFAULT_BRANCH="main"
 fi
 
-echo -e "  ${CYAN}→${NC} Base branch detected: ${DEFAULT_BRANCH}"
+# If custom base branch flag is set, ask user to select
+if [ "$USE_CUSTOM_BASE" = true ]; then
+    echo ""
+    echo -e "${BOLD}${BLUE}Select base branch for ${CYAN}${REPO_NAME}${NC}${BOLD}${BLUE}:${NC}"
+    echo -e "${DIM}(The new branch will be created from this branch)${NC}"
+    echo ""
+
+    # Show available branches (both local and remote)
+    echo -e "${DIM}Available branches:${NC}"
+    git branch -a --format="%(refname:short)" | grep -v "HEAD" | sort -u | head -20 | nl -w2 -s") "
+    echo ""
+
+    read -p "$(echo -e "Enter branch name or number [default: ${CYAN}${DEFAULT_BRANCH}${NC}]: ")" BASE_SELECTION
+
+    if [ -n "$BASE_SELECTION" ]; then
+        # Check if it's a number
+        if [[ "$BASE_SELECTION" =~ ^[0-9]+$ ]]; then
+            # User selected by number
+            SELECTED_BRANCH=$(git branch -a --format="%(refname:short)" | grep -v "HEAD" | sort -u | head -20 | sed -n "${BASE_SELECTION}p")
+            if [ -n "$SELECTED_BRANCH" ]; then
+                DEFAULT_BRANCH="$SELECTED_BRANCH"
+            else
+                echo -e "${YELLOW}⚠${NC}  Invalid selection, using default: ${DEFAULT_BRANCH}"
+            fi
+        else
+            # User entered branch name directly
+            DEFAULT_BRANCH="$BASE_SELECTION"
+        fi
+    fi
+    echo ""
+fi
+
+echo -e "  ${CYAN}→${NC} Base branch: ${YELLOW}${DEFAULT_BRANCH}${NC}"
 
 if [ "$BRANCH_EXISTS" = true ]; then
     # Create worktree with existing branch

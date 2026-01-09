@@ -276,16 +276,16 @@ The multi-repo workflow automatically creates `.code-workspace` files:
 
 ### Single-Repo Commands
 
-| Command                            | Description                     | Example                     |
-| ---------------------------------- | ------------------------------- | --------------------------- |
-| `wt-new [repo] <branch> [-c]`      | Create worktree with new branch | `wt-new feature/auth -c`    |
-| `wt-existing [repo] <branch> [-c]` | Checkout existing branch        | `wt-existing hotfix/bug -c` |
+| Command                                 | Description                     | Example                        |
+| --------------------------------------- | ------------------------------- | ------------------------------ |
+| `wt-new [repo] <branch> [-c] [-b]`      | Create worktree with new branch | `wt-new feature/auth -c -b`    |
+| `wt-existing [repo] <branch> [-c]`      | Checkout existing branch        | `wt-existing hotfix/bug -c`    |
 
 ### Multi-Repo Commands
 
-| Command                   | Description                   | Example           |
-| ------------------------- | ----------------------------- | ----------------- |
-| `wt-multi-new [dir] [-c]` | Create worktrees across repos | `wt-multi-new -c` |
+| Command                        | Description                   | Example              |
+| ------------------------------ | ----------------------------- | -------------------- |
+| `wt-multi-new [dir] [-c] [-b]` | Create worktrees across repos | `wt-multi-new -c -b` |
 
 ### Navigation & Management
 
@@ -299,9 +299,10 @@ The multi-repo workflow automatically creates `.code-workspace` files:
 
 ### Flags
 
-| Flag             | Description                   |
-| ---------------- | ----------------------------- |
-| `-c`, `--cursor` | Open in Cursor after creation |
+| Flag                  | Description                                         |
+| --------------------- | --------------------------------------------------- |
+| `-c`, `--cursor`      | Open in Cursor after creation                       |
+| `-b`, `--base-branch` | Choose custom base branch interactively (per repo)  |
 
 ---
 
@@ -365,7 +366,42 @@ git push
 wt-clean
 ```
 
-### Example 3: Quick PR Review
+### Example 3: Custom Base Branch (Hotfix from Staging)
+
+```bash
+# Need to create hotfix from staging instead of main
+wt-new hotfix/GTT-5555-critical-bug -c -b
+
+# Interactive prompt appears:
+# Select base branch for subscription-front:
+# 1) main
+# 2) staging
+# 3) develop
+# Enter branch name or number [default: main]: 2
+
+# Creates new branch from staging
+# Fix the bug, test, then merge to staging
+```
+
+### Example 4: Multi-Repo with Different Base Branches
+
+```bash
+# Frontend from develop, backend from staging
+cd ~/projects
+wt-multi-new -c -b
+# Select: 1 2 (front + back)
+# Branch: feature/GTT-6666-new-integration
+
+# For subscription-front:
+# Enter branch name or number [default: main]: develop
+
+# For subscription-back:
+# Enter branch name or number [default: master]: staging
+
+# Each repo starts from different base!
+```
+
+### Example 5: Quick PR Review
 
 ```bash
 # Review a colleague's PR without leaving your work

@@ -29,6 +29,39 @@ source ./wt-list.sh
 ### No Build/Test/Lint Commands
 This is a pure bash script repository with no build system, test framework, or linters. Changes should be tested manually by running the scripts.
 
+## Documentation Maintenance (CRITICAL)
+
+**When making ANY change to script functionality, flags, or commands, you MUST update these files:**
+
+1. **README.md** - User-facing documentation
+   - Update command tables with new flags/options
+   - Add examples demonstrating new features
+   - Update "Command Reference" section
+   - Update "Flags" table
+   - Add real-world examples if applicable
+
+2. **wt-help.sh** - Built-in help command
+   - Update command syntax in help output
+   - Add new flags to descriptions
+   - Update examples section
+   - Keep consistent with README.md
+
+3. **AGENTS.md** (this file) - AI assistant guidance
+   - Update architecture information for significant changes
+   - Add new patterns or conventions
+   - Update command lists if new scripts are added
+
+**Example: Adding a new flag**
+If you add `-x` flag to `wt-new.sh`:
+- ✅ Update `wt-new.sh` with functionality
+- ✅ Update README.md command table: `wt-new [repo] <branch> [-c] [-x]`
+- ✅ Update README.md flags table: Add row for `-x, --example`
+- ✅ Update README.md examples: Show `-x` flag in use
+- ✅ Update wt-help.sh: Add `-x` to command description and examples
+- ✅ Update AGENTS.md if it introduces new patterns
+
+**This is NOT optional.** Outdated documentation causes user confusion and makes the tool harder to use.
+
 ## Architecture
 
 ### Core Script Components

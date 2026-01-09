@@ -10,15 +10,21 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 BOLD='\033[1m'
+DIM='\033[2m'
 
 # Parse arguments
 ROOT_DIR=""
 OPEN_CURSOR=false
+USE_CUSTOM_BASE=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         -c|--cursor)
             OPEN_CURSOR=true
+            shift
+            ;;
+        -b|--base-branch)
+            USE_CUSTOM_BASE=true
             shift
             ;;
         *)
@@ -189,8 +195,40 @@ for repo in "${SELECTED_REPOS[@]}"; do
     if [ -z "$DEFAULT_BRANCH" ]; then
         DEFAULT_BRANCH="main"
     fi
-    
-    echo -e "  ${CYAN}→${NC} Base branch detected: ${DEFAULT_BRANCH}"
+
+    # If custom base branch flag is set, ask user to select for this repo
+    if [ "$USE_CUSTOM_BASE" = true ]; then
+        echo ""
+        echo -e "  ${BOLD}${BLUE}Select base branch for ${CYAN}${repo}${NC}${BOLD}${BLUE}:${NC}"
+        echo -e "  ${DIM}(The new branch will be created from this branch)${NC}"
+        echo ""
+
+        # Show available branches (both local and remote)
+        echo -e "  ${DIM}Available branches:${NC}"
+        git branch -a --format="%(refname:short)" | grep -v "HEAD" | sort -u | head -20 | nl -w2 -s") " | sed 's/^/  /'
+        echo ""
+
+        read -p "$(echo -e "  Enter branch name or number [default: ${CYAN}${DEFAULT_BRANCH}${NC}]: ")" BASE_SELECTION
+
+        if [ -n "$BASE_SELECTION" ]; then
+            # Check if it's a number
+            if [[ "$BASE_SELECTION" =~ ^[0-9]+$ ]]; then
+                # User selected by number
+                SELECTED_BRANCH=$(git branch -a --format="%(refname:short)" | grep -v "HEAD" | sort -u | head -20 | sed -n "${BASE_SELECTION}p")
+                if [ -n "$SELECTED_BRANCH" ]; then
+                    DEFAULT_BRANCH="$SELECTED_BRANCH"
+                else
+                    echo -e "  ${YELLOW}⚠${NC}  Invalid selection, using default: ${DEFAULT_BRANCH}"
+                fi
+            else
+                # User entered branch name directly
+                DEFAULT_BRANCH="$BASE_SELECTION"
+            fi
+        fi
+        echo ""
+    fi
+
+    echo -e "  ${CYAN}→${NC} Base branch: ${YELLOW}${DEFAULT_BRANCH}${NC}"
     
     if [ "$BRANCH_EXISTS" = true ]; then
         # Create worktree with existing branch
