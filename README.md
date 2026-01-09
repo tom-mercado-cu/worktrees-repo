@@ -1,14 +1,14 @@
 # Git Worktree Tools 🌿
 
-Herramientas para gestionar git worktrees de forma simple, diseñadas para trabajar con AI coding assistants (Cursor, etc).
+Simple git worktree management tools, designed for working with AI coding assistants (Cursor, etc).
 
-## ⚡ Instalación Rápida
+## ⚡ Quick Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/tom-mercado-cu/worktrees-repo/main/remote-install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/tom-mercado-cu/worktrees-repo/refs/heads/main/remote-install.sh | bash
 ```
 
-O manualmente:
+Or manually:
 
 ```bash
 git clone https://github.com/tom-mercado-cu/worktrees-repo.git ~/.wt-tools
@@ -17,18 +17,18 @@ cd ~/.wt-tools
 source ~/.zshrc
 ```
 
-## 📦 Comandos
+## 📦 Commands
 
 ### Single-Repo
 
 ```bash
-# Crear worktree con nueva branch (desde dentro del repo)
+# Create worktree with new branch (from inside the repo)
 wt-new feature/my-branch -c
 
-# Crear worktree especificando el repo (desde cualquier lugar)
+# Create worktree specifying the repo (from anywhere)
 wt-new admin-front feature/my-branch -c
 
-# Checkout de branch existente
+# Checkout existing branch
 wt-existing feature/existing-branch -c
 wt-existing admin-front feature/existing-branch -c
 ```
@@ -36,30 +36,30 @@ wt-existing admin-front feature/existing-branch -c
 ### Multi-Repo
 
 ```bash
-# Crear worktrees en múltiples repos (fullstack)
+# Create worktrees across multiple repos (fullstack)
 wt-multi-new -c
 ```
 
-### Navegación y Gestión
+### Navigation & Management
 
 ```bash
-wt-list      # Listar y navegar a worktrees
-wt-clean     # Eliminar worktrees
-wt-prune     # Limpiar referencias huérfanas
-wt-help      # Mostrar ayuda
+wt-list      # List and navigate to worktrees
+wt-clean     # Remove worktrees
+wt-prune     # Clean up orphaned references
+wt-help      # Show help
 ```
 
 ## 🎯 Flags
 
-| Flag | Descripción |
-|------|-------------|
-| `-c`, `--cursor` | Abrir en Cursor después de crear |
+| Flag             | Description                   |
+| ---------------- | ----------------------------- |
+| `-c`, `--cursor` | Open in Cursor after creation |
 
-## 📂 Estructura de Directorios
+## 📂 Directory Structure
 
 ```
-tu-proyecto/
-├── repo-1/                      ← Repos principales
+your-project/
+├── repo-1/                      ← Main repos
 ├── repo-2/
 └── worktrees/
     └── feature-branch-name/
@@ -70,54 +70,54 @@ tu-proyecto/
 
 ## ✨ Features
 
-- ✅ Copia automática de `.env`
-- ✅ Instalación de dependencias (detecta pnpm/yarn/npm)
-- ✅ Auto-detección de branch default (main/master)
-- ✅ Generación de `.code-workspace` para multi-repo
-- ✅ Limpieza de branches al eliminar worktrees
-- ✅ Integración con Cursor
+- ✅ Automatic `.env` file copying
+- ✅ Dependency installation (detects pnpm/yarn/npm)
+- ✅ Auto-detection of default branch (main/master)
+- ✅ `.code-workspace` generation for multi-repo
+- ✅ Branch cleanup when removing worktrees
+- ✅ Cursor integration
 
-## 🔄 Actualizar
+## 🔄 Update
 
 ```bash
 cd ~/.wt-tools && git pull
 source ~/.zshrc
 ```
 
-## 🗑️ Desinstalar
+## 🗑️ Uninstall
 
-1. Eliminar los aliases de tu `~/.zshrc` (buscar "Git Worktree management")
-2. Eliminar el directorio: `rm -rf ~/.wt-tools`
+1. Remove the aliases from your `~/.zshrc` (search for "Git Worktree management")
+2. Delete the directory: `rm -rf ~/.wt-tools`
 
-## 💡 Ejemplos de Uso
+## 💡 Usage Examples
 
-### Trabajo diario (single-repo)
+### Daily work (single-repo)
 
 ```bash
-# Empezar feature
+# Start a feature
 cd ~/projects/my-app
 wt-new feature/GTT-1234-auth -c
 
-# ... trabajar con Cursor/AI ...
+# ... work with Cursor/AI ...
 
-# Al terminar, limpiar
+# When done, clean up
 wt-clean
 ```
 
 ### Fullstack feature (multi-repo)
 
 ```bash
-# Desde directorio con front + back
+# From directory containing front + back
 cd ~/projects
 wt-multi-new -c
-# Seleccionar repos, ingresar branch name
-# Se abre Cursor con workspace unificado
+# Select repos, enter branch name
+# Cursor opens with unified workspace
 ```
 
-### Review de PR
+### PR Review
 
 ```bash
 wt-existing subscription-front pr/fix-bug -c
-# Revisar, aprobar, cerrar
+# Review, approve, close
 wt-clean
 ```
