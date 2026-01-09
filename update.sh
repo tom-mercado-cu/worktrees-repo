@@ -42,7 +42,14 @@ if [ -z "$ZSHRC_FILE" ]; then
     exit 1
 fi
 
-echo -e "${CYAN}→${NC} Found zshrc: ${DIM}$ZSHRC_FILE${NC}"
+# Resolve symlink to real file
+if [ -L "$ZSHRC_FILE" ]; then
+    REAL_ZSHRC_FILE=$(readlink -f "$ZSHRC_FILE" 2>/dev/null || readlink "$ZSHRC_FILE")
+    echo -e "${CYAN}→${NC} Found zshrc: ${DIM}$ZSHRC_FILE${NC} → ${DIM}$REAL_ZSHRC_FILE${NC}"
+    ZSHRC_FILE="$REAL_ZSHRC_FILE"
+else
+    echo -e "${CYAN}→${NC} Found zshrc: ${DIM}$ZSHRC_FILE${NC}"
+fi
 echo ""
 
 # Step 1: Remove wt-* aliases from .zshrc
