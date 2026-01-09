@@ -22,7 +22,7 @@ echo ""
 # Check if worktrees directory exists
 if [ ! -d "$WORKTREES_DIR" ]; then
     echo -e "${RED}No worktrees directory found at $WORKTREES_DIR${NC}"
-    echo -e "${CYAN}Tip: Use worktrees.sh to create worktrees first.${NC}"
+    echo -e "${CYAN}Tip: Use 'wt-new' or 'wt-multi-new' to create worktrees first.${NC}"
     return 1 2>/dev/null || exit 1
 fi
 
@@ -66,7 +66,7 @@ done
 
 if [ $COUNT -eq 0 ]; then
     echo -e "${RED}No worktrees found in $WORKTREES_DIR${NC}"
-    echo -e "${CYAN}Tip: Use worktrees.sh to create worktrees first.${NC}"
+    echo -e "${CYAN}Tip: Use 'wt-new' or 'wt-multi-new' to create worktrees first.${NC}"
     return 1 2>/dev/null || exit 1
 fi
 

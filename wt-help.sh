@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+BOLD='\033[1m'
+DIM='\033[2m'
+
+echo -e "${BOLD}${CYAN}╔════════════════════════════════════════╗${NC}"
+echo -e "${BOLD}${CYAN}║     Git Worktree Commands Help         ║${NC}"
+echo -e "${BOLD}${CYAN}╚════════════════════════════════════════╝${NC}"
+echo ""
+
+echo -e "${BOLD}${BLUE}📦 Single-Repo Commands:${NC}"
+echo ""
+echo -e "  ${YELLOW}wt-new${NC} ${DIM}[branch] [-c]${NC}"
+echo -e "      Create new worktree with a new branch"
+echo -e "      ${DIM}Options: -c, --cursor  Open in Cursor after creation${NC}"
+echo ""
+echo -e "  ${YELLOW}wt-existing${NC} ${DIM}[branch] [-c]${NC}"
+echo -e "      Create worktree for an existing branch"
+echo -e "      ${DIM}Options: -c, --cursor  Open in Cursor after creation${NC}"
+echo ""
+
+echo -e "${BOLD}${BLUE}🔀 Multi-Repo Commands:${NC}"
+echo ""
+echo -e "  ${YELLOW}wt-multi-new${NC} ${DIM}[directory] [-c]${NC}"
+echo -e "      Create worktrees across multiple repositories"
+echo -e "      ${DIM}Options: -c, --cursor  Open workspace in Cursor after creation${NC}"
+echo ""
+
+echo -e "${BOLD}${BLUE}📋 Navigation & Management:${NC}"
+echo ""
+echo -e "  ${YELLOW}wt-list${NC}"
+echo -e "      List all worktrees and navigate to one interactively"
+echo ""
+echo -e "  ${YELLOW}wt-clean${NC}"
+echo -e "      Remove worktrees interactively (with option to delete branches)"
+echo ""
+echo -e "  ${YELLOW}wt-prune${NC}"
+echo -e "      Clean up orphaned worktree references in all repos"
+echo ""
+echo -e "  ${YELLOW}wt-help${NC}"
+echo -e "      Show this help message"
+echo ""
+
+echo -e "${BOLD}${BLUE}💡 Examples:${NC}"
+echo ""
+echo -e "  ${DIM}# Create single-repo worktree and open in Cursor${NC}"
+echo -e "  ${CYAN}wt-new feature/GTT-1234-new-feature -c${NC}"
+echo ""
+echo -e "  ${DIM}# Checkout existing branch${NC}"
+echo -e "  ${CYAN}wt-existing origin/feature/existing-branch${NC}"
+echo ""
+echo -e "  ${DIM}# Create multi-repo worktrees (front + back)${NC}"
+echo -e "  ${CYAN}wt-multi-new -c${NC}"
+echo ""
+echo -e "  ${DIM}# Navigate to an existing worktree${NC}"
+echo -e "  ${CYAN}wt-list${NC}"
+echo ""
+echo -e "  ${DIM}# Clean up worktrees after merge${NC}"
+echo -e "  ${CYAN}wt-clean${NC}"
+echo ""
+
+echo -e "${BOLD}${BLUE}📂 Directory Structure:${NC}"
+echo ""
+echo -e "  ${DIM}your-project/${NC}"
+echo -e "  ${DIM}├── repo-1/                  ${NC}${CYAN}← Main repos${NC}"
+echo -e "  ${DIM}├── repo-2/${NC}"
+echo -e "  ${DIM}└── worktrees/${NC}"
+echo -e "  ${DIM}    └── feature-branch-name/${NC}"
+echo -e "  ${DIM}        ├── repo-1/          ${NC}${CYAN}← Worktrees${NC}"
+echo -e "  ${DIM}        ├── repo-2/${NC}"
+echo -e "  ${DIM}        └── feature-branch-name.code-workspace${NC}"
+echo ""
+
+echo -e "${BOLD}${BLUE}🔧 Features:${NC}"
+echo ""
+echo -e "  ${GREEN}✓${NC} Automatic .env file copying"
+echo -e "  ${GREEN}✓${NC} Dependency installation (pnpm/yarn/npm detection)"
+echo -e "  ${GREEN}✓${NC} Auto-detection of default branch (main/master)"
+echo -e "  ${GREEN}✓${NC} VS Code/Cursor workspace file generation"
+echo -e "  ${GREEN}✓${NC} Branch cleanup on worktree removal"
+echo ""
+
+echo -e "${DIM}For more info: https://git-scm.com/docs/git-worktree${NC}"
+echo ""

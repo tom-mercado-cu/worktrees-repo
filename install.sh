@@ -86,19 +86,41 @@ fi
 echo -e "${GREEN}Found zshrc:${NC} ${CYAN}$ZSHRC_FILE${NC}"
 echo ""
 
-# Define the aliases
+# Define the aliases - using consistent naming with wt- prefix
 ALIASES_BLOCK="
 # Git Worktree management
-alias wt='source $SCRIPT_DIR/list-worktrees.sh'
-alias wtnew='$SCRIPT_DIR/worktrees.sh'
-alias wtrm='$SCRIPT_DIR/remove-worktrees.sh'"
+# Single-repo commands
+alias wt-new='$SCRIPT_DIR/wt-new.sh'
+alias wt-existing='$SCRIPT_DIR/wt-existing.sh'
+
+# Multi-repo commands
+alias wt-multi-new='$SCRIPT_DIR/wt-multi-new.sh'
+
+# Navigation & management
+alias wt-list='source $SCRIPT_DIR/wt-list.sh'
+alias wt-clean='$SCRIPT_DIR/wt-clean.sh'
+alias wt-prune='$SCRIPT_DIR/wt-prune.sh'
+alias wt-help='$SCRIPT_DIR/wt-help.sh'"
 
 # Check if aliases already exist
-if grep -q "alias wt=" "$ZSHRC_FILE" || grep -q "alias wtnew=" "$ZSHRC_FILE" || grep -q "alias wtrm=" "$ZSHRC_FILE"; then
+if grep -q "alias wt-new=" "$ZSHRC_FILE" || grep -q "alias wt-multi-new=" "$ZSHRC_FILE" || grep -q "alias wt-list=" "$ZSHRC_FILE"; then
     echo -e "${YELLOW}⚠  Warning:${NC} Some worktree aliases already exist in your zshrc."
     echo -e "${CYAN}Please remove them manually before running this installer, or update them yourself.${NC}"
     echo ""
     echo -e "${DIM}Existing aliases found:${NC}"
+    grep -E "alias wt-" "$ZSHRC_FILE" | while read -r line; do
+        echo -e "  ${DIM}$line${NC}"
+    done
+    echo ""
+    exit 1
+fi
+
+# Also check for old aliases
+if grep -q "alias wt=" "$ZSHRC_FILE" || grep -q "alias wtnew=" "$ZSHRC_FILE" || grep -q "alias wtrm=" "$ZSHRC_FILE"; then
+    echo -e "${YELLOW}⚠  Warning:${NC} Old worktree aliases (wt, wtnew, wtrm) found in your zshrc."
+    echo -e "${CYAN}Please remove them manually before running this installer.${NC}"
+    echo ""
+    echo -e "${DIM}Old aliases found:${NC}"
     grep -E "alias (wt|wtnew|wtrm)=" "$ZSHRC_FILE" | while read -r line; do
         echo -e "  ${DIM}$line${NC}"
     done
@@ -109,9 +131,18 @@ fi
 # Show what we're going to do
 echo -e "${BOLD}${BLUE}This installer will add the following aliases to your zshrc:${NC}"
 echo ""
-echo -e "  ${YELLOW}wt${NC}     → Navigate to an existing worktree"
-echo -e "  ${YELLOW}wtnew${NC}  → Create new worktrees for a feature branch"
-echo -e "  ${YELLOW}wtrm${NC}   → Remove existing worktrees"
+echo -e "  ${BOLD}Single-Repo:${NC}"
+echo -e "    ${YELLOW}wt-new${NC}        → Create worktree with new branch"
+echo -e "    ${YELLOW}wt-existing${NC}   → Create worktree for existing branch"
+echo ""
+echo -e "  ${BOLD}Multi-Repo:${NC}"
+echo -e "    ${YELLOW}wt-multi-new${NC}  → Create worktrees across multiple repos"
+echo ""
+echo -e "  ${BOLD}Navigation & Management:${NC}"
+echo -e "    ${YELLOW}wt-list${NC}       → Navigate to an existing worktree"
+echo -e "    ${YELLOW}wt-clean${NC}      → Remove existing worktrees"
+echo -e "    ${YELLOW}wt-prune${NC}      → Clean up orphaned references"
+echo -e "    ${YELLOW}wt-help${NC}       → Show help"
 echo ""
 echo -e "${DIM}The following lines will be added to: $ZSHRC_FILE${NC}"
 echo -e "${DIM}─────────────────────────────────────────────────────${NC}"
@@ -138,9 +169,11 @@ echo -e "  1. Reload your shell configuration:"
 echo -e "     ${YELLOW}source $ZSHRC_FILE${NC}"
 echo ""
 echo -e "  2. Try the commands:"
-echo -e "     ${YELLOW}wtnew${NC}  - to create worktrees"
-echo -e "     ${YELLOW}wt${NC}     - to navigate to a worktree"
-echo -e "     ${YELLOW}wtrm${NC}   - to remove worktrees"
+echo -e "     ${YELLOW}wt-help${NC}       - to see all available commands"
+echo -e "     ${YELLOW}wt-new${NC}        - to create a single-repo worktree"
+echo -e "     ${YELLOW}wt-multi-new${NC}  - to create multi-repo worktrees"
+echo -e "     ${YELLOW}wt-list${NC}       - to navigate to a worktree"
+echo -e "     ${YELLOW}wt-clean${NC}      - to remove worktrees"
 echo ""
 echo -e "${DIM}─────────────────────────────────────────────────────${NC}"
 echo -e "${BOLD}${CYAN}Important notes:${NC}"
@@ -151,7 +184,7 @@ echo ""
 echo -e "  • If you move this directory (${CYAN}$SCRIPT_DIR${NC})"
 echo -e "    you must update the aliases paths accordingly."
 echo ""
-echo -e "  • The scripts work relative to your current directory."
-echo -e "    Run them from the directory containing your git repos."
+echo -e "  • Single-repo commands (wt-new, wt-existing) work from inside a git repo."
+echo -e "  • Multi-repo commands work from a directory containing multiple repos."
 echo -e "${DIM}─────────────────────────────────────────────────────${NC}"
 echo ""

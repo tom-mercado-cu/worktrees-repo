@@ -11,12 +11,31 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 BOLD='\033[1m'
 
-# Get the directory where the script is located (or current directory)
-ROOT_DIR="${1:-$(pwd)}"
+# Parse arguments
+ROOT_DIR=""
+OPEN_CURSOR=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -c|--cursor)
+            OPEN_CURSOR=true
+            shift
+            ;;
+        *)
+            if [ -z "$ROOT_DIR" ]; then
+                ROOT_DIR="$1"
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Default to current directory if not specified
+ROOT_DIR="${ROOT_DIR:-$(pwd)}"
 WORKTREES_DIR="$ROOT_DIR/worktrees"
 
 echo -e "${BOLD}${CYAN}╔════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}${CYAN}║     Git Worktree Feature Manager       ║${NC}"
+echo -e "${BOLD}${CYAN}║     Git Worktree - Multi Repo          ║${NC}"
 echo -e "${BOLD}${CYAN}╚════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -99,8 +118,14 @@ COPY_ENV=${COPY_ENV:-Y}
 read -p "$(echo -e "  Install dependencies? [Y/n]: ")" INSTALL_DEPS
 INSTALL_DEPS=${INSTALL_DEPS:-Y}
 
-read -p "$(echo -e "  Open workspace in Cursor when done? [Y/n]: ")" OPEN_CURSOR
-OPEN_CURSOR=${OPEN_CURSOR:-Y}
+# Ask about Cursor if not already set via flag
+if [ "$OPEN_CURSOR" = false ]; then
+    read -p "$(echo -e "  Open workspace in Cursor when done? [Y/n]: ")" OPEN_CURSOR_INPUT
+    OPEN_CURSOR_INPUT=${OPEN_CURSOR_INPUT:-Y}
+    if [[ "$OPEN_CURSOR_INPUT" =~ ^[Yy]$ ]]; then
+        OPEN_CURSOR=true
+    fi
+fi
 
 # Create feature directory inside worktrees
 FEATURE_DIR="$WORKTREES_DIR/$BRANCH_DIR_NAME"
@@ -262,12 +287,9 @@ for repo in "${SELECTED_REPOS[@]}"; do
 done
 
 echo ""
-echo -e "${CYAN}Tip: To remove a worktree later, use:${NC}"
-echo -e "  ${YELLOW}cd <repo> && git worktree remove <worktree-path>${NC}"
-echo ""
 
 # Open workspace in Cursor
-if [[ "$OPEN_CURSOR" =~ ^[Yy]$ ]]; then
+if [ "$OPEN_CURSOR" = true ]; then
     echo -e "${CYAN}→${NC} Opening workspace in Cursor..."
     cursor "$WORKSPACE_FILE"
 else
@@ -278,4 +300,3 @@ fi
 echo ""
 echo -e "${GREEN}✓${NC} Done!"
 echo ""
-
