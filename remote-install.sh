@@ -31,21 +31,15 @@ fi
 # Check if already installed
 if [ -d "$INSTALL_DIR" ]; then
     echo -e "${YELLOW}⚠${NC}  wt-tools is already installed at ${CYAN}$INSTALL_DIR${NC}"
+    echo -e "${CYAN}→${NC} Updating to latest version..."
+    cd "$INSTALL_DIR"
+    git pull origin main
+    chmod +x "$INSTALL_DIR"/*.sh
+    echo -e "${GREEN}✓${NC} Updated!"
     echo ""
-    read -p "$(echo -e "Do you want to update it? [y/N]: ")" UPDATE
-    if [[ "$UPDATE" =~ ^[Yy]$ ]]; then
-        echo -e "${CYAN}→${NC} Updating..."
-        cd "$INSTALL_DIR"
-        git pull origin main
-        echo -e "${GREEN}✓${NC} Updated!"
-        echo ""
-        echo -e "${CYAN}Reload your shell to apply changes:${NC}"
-        echo -e "  ${YELLOW}source ~/.zshrc${NC}"
-        exit 0
-    else
-        echo -e "${CYAN}Installation cancelled.${NC}"
-        exit 0
-    fi
+    echo -e "${CYAN}Reload your shell to apply changes:${NC}"
+    echo -e "  ${YELLOW}source ~/.zshrc${NC}"
+    exit 0
 fi
 
 # Clone the repository
