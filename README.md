@@ -5,13 +5,13 @@ Herramientas para gestionar git worktrees de forma simple, diseñadas para traba
 ## ⚡ Instalación Rápida
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_ORG/wt-tools/main/remote-install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/tom-mercado-cu/worktrees-repo/main/remote-install.sh | bash
 ```
 
 O manualmente:
 
 ```bash
-git clone https://github.com/YOUR_ORG/wt-tools.git ~/.wt-tools
+git clone https://github.com/tom-mercado-cu/worktrees-repo.git ~/.wt-tools
 cd ~/.wt-tools
 ./install.sh
 source ~/.zshrc

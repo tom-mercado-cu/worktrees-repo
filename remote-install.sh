@@ -15,7 +15,7 @@ BOLD='\033[1m'
 
 # Configuration
 INSTALL_DIR="${WT_TOOLS_DIR:-$HOME/.wt-tools}"
-REPO_URL="${WT_TOOLS_REPO:-https://github.com/AgusCarpworktreesain/wt-tools.git}"  # TODO: Update with actual repo URL
+REPO_URL="${WT_TOOLS_REPO:-https://github.com/tom-mercado-cu/worktrees-repo.git}"
 
 echo -e "${BOLD}${CYAN}╔════════════════════════════════════════╗${NC}"
 echo -e "${BOLD}${CYAN}║   Git Worktree Tools - Remote Install  ║${NC}"
