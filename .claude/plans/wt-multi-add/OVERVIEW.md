@@ -77,6 +77,10 @@ The workspace filename follows pattern `{branch-dir-name}.code-workspace` where 
 | 1 | Core Script Implementation | Create wt-multi-add.sh with workspace detection, repo selection, worktree creation, and workspace update | None | pending |
 | 2 | Integration and Documentation | Update install.sh, wt-help.sh, README.md, and test end-to-end flow | Phase 1 | pending |
 
+**Phase Files:**
+- [PHASE-1-CORE-SCRIPT.md](./PHASE-1-CORE-SCRIPT.md)
+- [PHASE-2-INTEGRATION-DOCS.md](./PHASE-2-INTEGRATION-DOCS.md)
+
 ## Dependencies
 
 ### External Tools
