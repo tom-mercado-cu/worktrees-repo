@@ -270,6 +270,29 @@ The multi-repo workflow automatically creates `.code-workspace` files:
 - Shared terminal
 - AI sees full context
 
+### Adding Repos to Existing Workspace
+
+If you've created a multi-repo workspace and need to add more repos later:
+
+```bash
+# From within the worktree directory
+cd worktrees/feature-GTT-1234-auth
+wt-multi-add -c
+
+# Interactive menu shows only repos NOT already in workspace
+# Select additional repos
+# Workspace reopens with new repos included
+```
+
+**What happens:**
+
+1. Detects existing `.code-workspace` file
+2. Determines branch name from workspace context
+3. Shows repos not yet added to workspace
+4. Creates worktrees on same branch as existing repos
+5. Updates workspace file with new folder entries
+6. Reopens in Cursor (if `-c` flag)
+
 ---
 
 ## 📋 Command Reference
@@ -283,9 +306,10 @@ The multi-repo workflow automatically creates `.code-workspace` files:
 
 ### Multi-Repo Commands
 
-| Command                        | Description                   | Example              |
-| ------------------------------ | ----------------------------- | -------------------- |
-| `wt-multi-new [dir] [-c] [-b]` | Create worktrees across repos | `wt-multi-new -c -b` |
+| Command                        | Description                       | Example              |
+| ------------------------------ | --------------------------------- | -------------------- |
+| `wt-multi-new [dir] [-c] [-b]` | Create worktrees across repos     | `wt-multi-new -c -b` |
+| `wt-multi-add [-c]`            | Add repos to existing workspace   | `wt-multi-add -c`    |
 
 ### Navigation & Management
 
@@ -442,6 +466,28 @@ wt-new feature/GTT-1002-feature-b -c
 # Switch between them using wt-list
 wt-list
 # Select the one you want to work on
+```
+
+### Example 6: Incrementally Building Workspace
+
+```bash
+# Start with just frontend
+cd ~/projects
+wt-multi-new -c
+# Select: 1 (subscription-front only)
+# Branch: feature/GTT-1234-payments
+
+# Work on frontend
+# ... realize you need backend too ...
+
+# Add backend to existing workspace
+cd worktrees/feature-GTT-1234-payments
+wt-multi-add -c
+# Select: subscription-back
+# Workspace reopens with both repos
+
+# Continue working with full stack context
+# Both repos on same branch, unified workspace
 ```
 
 ---
@@ -610,6 +656,33 @@ wt-new feature/x
 cursor path/to/worktree
 ```
 
+### wt-multi-add: No workspace file found
+
+**Problem:** Running `wt-multi-add` from wrong directory
+
+**Solution:**
+
+```bash
+# Must run from within a worktree directory containing a .code-workspace file
+cd worktrees/feature-branch-name
+wt-multi-add -c
+
+# Or use wt-multi-new to create a new workspace first
+wt-multi-new -c
+```
+
+### wt-multi-add: All repos already in workspace
+
+**Problem:** All available repos are already added to the workspace
+
+**Solution:**
+
+```bash
+# This is expected - nothing to add!
+# If you need to work with different repos, create a new workspace:
+wt-multi-new -c
+```
+
 ### Can't remove worktree (in use)
 
 **Problem:** Terminal or editor open in that directory
@@ -652,7 +725,8 @@ Need to work on code?
 │
 └─ Multiple services (front + back)?
    │
-   └─ Any case → wt-multi-new -c
+   ├─ New workspace? → wt-multi-new -c
+   └─ Add to existing? → wt-multi-add -c
 
 Need to clean up?
 │
@@ -676,6 +750,7 @@ Need help?
 - ✅ Auto-detection of default branch (main/master)
 - ✅ Auto-fetch before creating worktrees
 - ✅ `.code-workspace` generation for multi-repo
+- ✅ Incremental workspace building (add repos anytime)
 - ✅ Branch cleanup on worktree removal
 - ✅ Cursor integration with `-c` flag
 - ✅ Works from inside or outside repos
