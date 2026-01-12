@@ -23,80 +23,80 @@ Create the `wt-multi-add.sh` script that enables users to add additional reposit
 
 ### Step 1: Create Script File and Argument Parsing
 
-- [ ] Create `wt-multi-add.sh` in repository root
-- [ ] Add shebang, `set -e`, and color definitions (reuse from wt-multi-new.sh lines 1-12)
-- [ ] Parse `-c|--cursor` flag to set `OPEN_CURSOR` variable
-- [ ] Add header banner output for visual consistency
+- [x] Create `wt-multi-add.sh` in repository root
+- [x] Add shebang, `set -e`, and color definitions (reuse from wt-multi-new.sh lines 1-12)
+- [x] Parse `-c|--cursor` flag to set `OPEN_CURSOR` variable
+- [x] Add header banner output for visual consistency
 
 ### Step 2: Workspace File Detection
 
-- [ ] Check current directory for `*.code-workspace` files using glob pattern
-- [ ] If not found, check parent directory (handle case where user is in repo subdirectory)
-- [ ] If multiple workspace files found, prompt user to select one
-- [ ] If no workspace file found, display error and exit with message "No .code-workspace file found"
-- [ ] Extract workspace filename for later reference
+- [x] Check current directory for `*.code-workspace` files using glob pattern
+- [x] If not found, check parent directory (handle case where user is in repo subdirectory)
+- [x] If multiple workspace files found, prompt user to select one
+- [x] If no workspace file found, display error and exit with message "No .code-workspace file found"
+- [x] Extract workspace filename for later reference
 
 ### Step 3: Parse Workspace File
 
-- [ ] Use `jq` to extract folders array from workspace JSON
-- [ ] Parse folder names from `folders[].name` or `folders[].path` fields
-- [ ] Store existing repo names in array `EXISTING_REPOS`
-- [ ] Infer branch name from workspace filename (remove `.code-workspace` extension)
-- [ ] Convert sanitized branch dir name back to branch name (replace `-` with `/` where appropriate)
+- [x] Use `jq` to extract folders array from workspace JSON
+- [x] Parse folder names from `folders[].name` or `folders[].path` fields
+- [x] Store existing repo names in array `EXISTING_REPOS`
+- [x] Infer branch name from workspace filename (remove `.code-workspace` extension)
+- [x] Convert sanitized branch dir name back to branch name (replace `-` with `/` where appropriate)
 
 ### Step 4: Detect Available Repositories
 
-- [ ] Determine root directory by navigating two levels up from workspace location (worktrees/feature-dir/)
-- [ ] Find all directories with `.git` in root directory
-- [ ] Filter out repos already in `EXISTING_REPOS` array
-- [ ] Filter out `worktrees` directory itself
-- [ ] Store available repos in `AVAILABLE_REPOS` array
-- [ ] If no available repos, display "All repos are already in workspace" and exit
+- [x] Determine root directory by navigating two levels up from workspace location (worktrees/feature-dir/)
+- [x] Find all directories with `.git` in root directory
+- [x] Filter out repos already in `EXISTING_REPOS` array
+- [x] Filter out `worktrees` directory itself
+- [x] Store available repos in `AVAILABLE_REPOS` array
+- [x] If no available repos, display "All repos are already in workspace" and exit
 
 ### Step 5: Interactive Repository Selection
 
-- [ ] Display numbered list of available repositories
-- [ ] Prompt user with "Select repositories to add: (Enter numbers separated by spaces, or 'all')"
-- [ ] Parse user selection (handle 'all', 'a', or space-separated numbers)
-- [ ] Validate selection indices are within bounds
-- [ ] Store selected repos in `SELECTED_REPOS` array
-- [ ] Display selected repos for confirmation
+- [x] Display numbered list of available repositories
+- [x] Prompt user with "Select repositories to add: (Enter numbers separated by spaces, or 'all')"
+- [x] Parse user selection (handle 'all', 'a', or space-separated numbers)
+- [x] Validate selection indices are within bounds
+- [x] Store selected repos in `SELECTED_REPOS` array
+- [x] Display selected repos for confirmation
 
 ### Step 6: Configuration Options
 
-- [ ] Prompt for copying `.env` files (default Y)
-- [ ] Prompt for installing dependencies (default Y)
-- [ ] Prompt for opening in Cursor if not set via `-c` flag (default Y)
+- [x] Prompt for copying `.env` files (default Y)
+- [x] Prompt for installing dependencies (default Y)
+- [x] Prompt for opening in Cursor if not set via `-c` flag (default Y)
 
 ### Step 7: Create Worktrees for Selected Repos
 
-- [ ] Determine feature directory from workspace file location
-- [ ] Loop through `SELECTED_REPOS` array
-- [ ] For each repo, change to repo path in root directory
-- [ ] Fetch latest from remote with `git fetch --all`
-- [ ] Check if branch already exists locally with `git show-ref`
-- [ ] Detect default branch using methods from wt-multi-new.sh (lines 167-191)
-- [ ] Create worktree using appropriate git command based on branch existence
-- [ ] Copy `.env` file if option enabled and file exists (lines 213-218 pattern)
-- [ ] Install dependencies if option enabled and `package.json` exists (lines 220-241 pattern)
-- [ ] Display progress with colored output for each repo
+- [x] Determine feature directory from workspace file location
+- [x] Loop through `SELECTED_REPOS` array
+- [x] For each repo, change to repo path in root directory
+- [x] Fetch latest from remote with `git fetch --all`
+- [x] Check if branch already exists locally with `git show-ref`
+- [x] Detect default branch using methods from wt-multi-new.sh (lines 167-191)
+- [x] Create worktree using appropriate git command based on branch existence
+- [x] Copy `.env` file if option enabled and file exists (lines 213-218 pattern)
+- [x] Install dependencies if option enabled and `package.json` exists (lines 220-241 pattern)
+- [x] Display progress with colored output for each repo
 
 ### Step 8: Update Workspace File
 
-- [ ] Use `jq` to read existing workspace JSON
-- [ ] For each newly created worktree, add folder object to folders array
-- [ ] Each folder object format: `{"name": "repo-name", "path": "./repo-name"}`
-- [ ] Preserve existing settings and other workspace properties
-- [ ] Write updated JSON back to workspace file with proper formatting
-- [ ] Validate JSON structure after writing
+- [x] Use `jq` to read existing workspace JSON
+- [x] For each newly created worktree, add folder object to folders array
+- [x] Each folder object format: `{"name": "repo-name", "path": "./repo-name"}`
+- [x] Preserve existing settings and other workspace properties
+- [x] Write updated JSON back to workspace file with proper formatting
+- [x] Validate JSON structure after writing
 
 ### Step 9: Final Output and Cursor Integration
 
-- [ ] Display success message with count of repos added
-- [ ] List newly added worktrees with paths
-- [ ] If `OPEN_CURSOR` is true, execute `cursor "$WORKSPACE_FILE"`
-- [ ] Otherwise, display command to open workspace manually
-- [ ] Display "Done!" completion message
+- [x] Display success message with count of repos added
+- [x] List newly added worktrees with paths
+- [x] If `OPEN_CURSOR` is true, execute `cursor "$WORKSPACE_FILE"`
+- [x] Otherwise, display command to open workspace manually
+- [x] Display "Done!" completion message
 
 ## Files to Create/Modify
 
@@ -113,7 +113,7 @@ Create the `wt-multi-add.sh` script that enables users to add additional reposit
 - [ ] Confirm dependencies are installed based on detected lock files
 - [ ] Test `-c` flag reopens workspace in Cursor
 - [ ] Test edge cases: no workspace file, all repos already added, invalid selections
-- [ ] Run `bash -n wt-multi-add.sh` to check for syntax errors
+- [x] Run `bash -n wt-multi-add.sh` to check for syntax errors
 
 ## Notes
 
