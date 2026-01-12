@@ -123,6 +123,7 @@ alias wt-existing='$SCRIPT_DIR/wt-existing.sh'
 
 # Multi-repo commands
 alias wt-multi-new='$SCRIPT_DIR/wt-multi-new.sh'
+alias wt-multi-add='$SCRIPT_DIR/wt-multi-add.sh'
 
 # Navigation & management
 alias wt-list='source $SCRIPT_DIR/wt-list.sh'
@@ -167,6 +168,7 @@ echo -e "    ${YELLOW}wt-existing${NC}   → Create worktree for existing branch
 echo ""
 echo -e "  ${BOLD}Multi-Repo:${NC}"
 echo -e "    ${YELLOW}wt-multi-new${NC}  → Create worktrees across multiple repos"
+echo -e "    ${YELLOW}wt-multi-add${NC}  → Add repos to existing workspace"
 echo ""
 echo -e "  ${BOLD}Navigation & Management:${NC}"
 echo -e "    ${YELLOW}wt-list${NC}       → Navigate to an existing worktree"

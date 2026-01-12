@@ -22,42 +22,42 @@ Integrate the new `wt-multi-add` command into the existing toolchain by updating
 
 ### Step 0: Validate Prerequisites
 
-- [ ] Verify `wt-multi-add.sh` script exists in the repository root
-- [ ] Verify the script is executable: `test -x wt-multi-add.sh && echo "OK" || echo "FAIL"`
-- [ ] If not executable, run: `chmod +x wt-multi-add.sh`
+- [x] Verify `wt-multi-add.sh` script exists in the repository root
+- [x] Verify the script is executable: `test -x wt-multi-add.sh && echo "OK" || echo "FAIL"`
+- [x] If not executable, run: `chmod +x wt-multi-add.sh`
 
 ### Step 1: Update Installation Script
 
-- [ ] Open `install.sh` file
-- [ ] Locate the ALIASES_BLOCK section (search for "Multi-repo commands" comment)
-- [ ] Add new alias entry under "Multi-repo commands" section, after the `wt-multi-new` alias: `alias wt-multi-add='$SCRIPT_DIR/wt-multi-add.sh'`
-- [ ] Ensure placement is after `wt-multi-new` for logical grouping
-- [ ] Verify the alias uses consistent formatting with existing aliases
+- [x] Open `install.sh` file
+- [x] Locate the ALIASES_BLOCK section (search for "Multi-repo commands" comment)
+- [x] Add new alias entry under "Multi-repo commands" section, after the `wt-multi-new` alias: `alias wt-multi-add='$SCRIPT_DIR/wt-multi-add.sh'`
+- [x] Ensure placement is after `wt-multi-new` for logical grouping
+- [x] Verify the alias uses consistent formatting with existing aliases
 
 ### Step 2: Update Help Documentation
 
-- [ ] Open `wt-help.sh` file
-- [ ] Locate the "Multi-Repo Commands" section (search for "Multi-Repo Commands" header)
-- [ ] Add new command entry after the `wt-multi-new` entry:
+- [x] Open `wt-help.sh` file
+- [x] Locate the "Multi-Repo Commands" section (search for "Multi-Repo Commands" header)
+- [x] Add new command entry after the `wt-multi-new` entry:
   ```
   echo -e "  ${YELLOW}wt-multi-add${NC} ${DIM}[directory] [-c]${NC}"
   echo -e "      Add additional repos to existing workspace"
   echo -e "      ${DIM}Options: -c, --cursor  Reopen workspace in Cursor after adding${NC}"
   echo ""
   ```
-- [ ] Update the installation preview section in `install.sh` (search for "Commands that will be available" section) to list the new `wt-multi-add` command
+- [x] Update the installation preview section in `install.sh` (search for "Commands that will be available" section) to list the new `wt-multi-add` command
 
 ### Step 3: Update README Documentation
 
-- [ ] Open `README.md` file
-- [ ] Locate "Multi-Repo Commands" section in the command reference table (search for "Multi-Repo Commands" header)
-- [ ] Add new table row for `wt-multi-add` after the `wt-multi-new` entry:
+- [x] Open `README.md` file
+- [x] Locate "Multi-Repo Commands" section in the command reference table (search for "Multi-Repo Commands" header)
+- [x] Add new table row for `wt-multi-add` after the `wt-multi-new` entry:
   ```markdown
   | `wt-multi-add [dir] [-c]` | Add repos to existing workspace | `wt-multi-add -c` |
   ```
-- [ ] Locate "Multi-Repo Workflow" section (search for "## Multi-Repo Workflow" heading)
-- [ ] Add new subsection after the multi-repo workflow explanation, titled "### Adding Repos to Existing Workspace"
-- [ ] Write usage example:
+- [x] Locate "Multi-Repo Workflow" section (search for "## Multi-Repo Workflow" heading)
+- [x] Add new subsection after the multi-repo workflow explanation, titled "### Adding Repos to Existing Workspace"
+- [x] Write usage example:
   ```markdown
   ### Adding Repos to Existing Workspace
 
@@ -82,13 +82,13 @@ Integrate the new `wt-multi-add` command into the existing toolchain by updating
   5. Updates workspace file with new folder entries
   6. Reopens in Cursor (if `-c` flag)
   ```
-- [ ] Add entry to Table of Contents linking to "Adding Repos to Existing Workspace" section
-- [ ] Update "Features" section if needed to mention incremental workspace building
+- [x] Add entry to Table of Contents linking to "Adding Repos to Existing Workspace" section
+- [x] Update "Features" section if needed to mention incremental workspace building
 
 ### Step 4: Add Example Use Case
 
-- [ ] In README.md "Real-World Examples" section (search for "## Real-World Examples" heading), add "Example 6: Incrementally Building Workspace" after Example 5
-- [ ] Write example scenario:
+- [x] In README.md "Real-World Examples" section (search for "## Real-World Examples" heading), add "Example 6: Incrementally Building Workspace" after Example 5
+- [x] Write example scenario:
   ```markdown
   ### Example 6: Incrementally Building Workspace
 
@@ -127,10 +127,10 @@ Integrate the new `wt-multi-add` command into the existing toolchain by updating
 
 ### Step 6: Document Edge Cases
 
-- [ ] Locate the "Troubleshooting" section in README.md (search for "## Troubleshooting" heading)
-- [ ] Add entry for "wt-multi-add: No workspace file found"
-- [ ] Add entry for "wt-multi-add: All repos already in workspace"
-- [ ] Document solution steps for each edge case
+- [x] Locate the "Troubleshooting" section in README.md (search for "## Troubleshooting" heading)
+- [x] Add entry for "wt-multi-add: No workspace file found"
+- [x] Add entry for "wt-multi-add: All repos already in workspace"
+- [x] Document solution steps for each edge case
 
 ## Files to Create/Modify
 
