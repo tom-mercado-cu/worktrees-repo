@@ -55,11 +55,18 @@ curl -fsSL https://raw.githubusercontent.com/tom-mercado-cu/worktrees-repo/refs/
 ### Manual Install
 
 ```bash
+# Clone the repository
 git clone https://github.com/tom-mercado-cu/worktrees-repo.git ~/.wt-tools
+
+# Run the installer (required!)
 cd ~/.wt-tools
 ./install.sh
+
+# Reload your shell
 source ~/.zshrc
 ```
+
+**Important:** Don't skip the `./install.sh` step - it adds the necessary aliases to your shell configuration.
 
 ### Verify Installation
 
@@ -586,6 +593,26 @@ wt-prune
 ---
 
 ## 🆘 Troubleshooting
+
+### "command not found: wt-new" (or any wt- command)
+
+**Problem:** The installation didn't complete - scripts exist but aliases weren't added to shell config
+
+**Solution:**
+
+```bash
+# Run the installer
+cd ~/.wt-tools
+./install.sh -y
+
+# Reload your shell
+source ~/.zshrc
+
+# Verify it works
+wt-help
+```
+
+**Note:** If you manually cloned the repo without running `install.sh`, the commands won't be available. The installer adds the necessary aliases to your `.zshrc` file.
 
 ### "fatal: 'branch' is already used by worktree"
 
